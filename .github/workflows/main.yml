@@ -1,18 +1,18 @@
 name: Flutter Web Deploy
 
-on: 
-  push: 
-    branches: 
+on:
+  push:
+    branches:
       - main
 
-permissions: 
+permissions:
   contents: read
   pages: write
   id-token: write
 
 jobs:
   build:
-    runs-on: windows-latest 
+    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
@@ -21,16 +21,19 @@ jobs:
         with:
           channel: stable
 
-      - run: flutter pub get   
-      
+      - run: flutter pub get
+
       - run: flutter build web --release --base-href "/my-portfolio/"
-      
+
+      - uses: actions/configure-pages@v5
+
       - uses: actions/upload-pages-artifact@v3
         with:
           path: build/web
+
   deploy:
     needs: build
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
 
     environment:
       name: github-pages
@@ -38,4 +41,3 @@ jobs:
     steps:
       - id: deployment
         uses: actions/deploy-pages@v4
-          
